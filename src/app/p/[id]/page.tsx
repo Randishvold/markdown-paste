@@ -16,7 +16,7 @@ export async function generateStaticParams() {
   return pastes?.map(({ id }) => ({ id })) || [];
 }
 
-export default async function PastePage({ params }) {
+export default async function PastePage({ params }: { params: { id: string } }) {
   const supabase = createSupabaseServerClient();
   const { id } = await params;
 

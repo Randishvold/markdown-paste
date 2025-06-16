@@ -4,7 +4,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 // Tipe untuk { params } sekarang disimpulkan secara otomatis oleh Next.js
 export async function GET(
   request: Request,
-  { params }
+   { params }: { params: { id: string } }
 ) {
   try {
     const { id } = await params;
