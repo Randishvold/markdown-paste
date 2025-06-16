@@ -1,15 +1,17 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 
-
-// Tipe untuk { params } sekarang disimpulkan secara otomatis oleh Next.js
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest) {
   try {
-    const id = params.id; 
+    const id = request.nextUrl.pathname.split('/').pop();
+    
+    if (!id) {
+      return NextResponse.json(
+        { error: "ID parameter is missing in the URL." },
+        { status: 400 }
+      );
+    }
 
     const supabase = createSupabaseServerClient();
 
@@ -25,7 +27,7 @@ export async function GET(
 
     return NextResponse.json(paste);
   } catch (e) {
-    console.error('Error fetching paste by ID:', e);
+    console.error(`Unhandled error in GET /api/paste/[id]:`, e);
     return NextResponse.json({ error: 'Server error.' }, { status: 500 });
   }
 }
