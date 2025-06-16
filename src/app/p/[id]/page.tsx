@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { processMarkdown } from '@/lib/markdown'; // Kita akan buat ini selanjutnya
+import { processMarkdown } from '@/lib/markdown';
 import Link from 'next/link';
+
 
 type PageProps = {
   params: { id: string };
 };
 
-// (Opsional tapi direkomendasikan) Generate beberapa halaman saat build time
 export async function generateStaticParams() {
   const supabase = createSupabaseServerClient();
   const { data: pastes } = await supabase
@@ -19,9 +19,11 @@ export async function generateStaticParams() {
   return pastes?.map(({ id }) => ({ id })) || [];
 }
 
+
 export default async function PastePage({ params }: PageProps) {
-  const supabase = createSupabaseServerClient();
   const id = params.id;
+
+  const supabase = createSupabaseServerClient();
 
   const { data: paste } = await supabase
     .from('pastes')
@@ -34,7 +36,8 @@ export default async function PastePage({ params }: PageProps) {
   }
 
   const processedHtml = await processMarkdown(paste.content);
-  const rawApiUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/paste/${id}`;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || '';
+  const rawApiUrl = `${appUrl}/api/paste/${id}`;
 
   return (
     <div className="min-h-screen bg-gray-50">
