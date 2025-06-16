@@ -2,28 +2,22 @@ import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
-import rehypeShiki from 'rehype-shiki';
-import * as shiki from 'shiki';
-
-// Cache instance highlighter agar tidak dibuat berulang kali
-let highlighter: shiki.Highlighter | undefined;
+// Impor paket yang benar
+import rehypeShiki from '@shikijs/rehype';
 
 export async function processMarkdown(content: string): Promise<string> {
-  // Inisialisasi highlighter jika belum ada
-  if (!highlighter) {
-    highlighter = await shiki.getHighlighter({
-      // Muat tema yang kita butuhkan. Anda bisa menambahkan lebih banyak.
-      themes: ['github-dark', 'github-light'], 
-      // Muat bahasa yang umum digunakan.
-      langs: ['javascript', 'typescript', 'python', 'bash', 'json', 'markdown', 'jsx', 'tsx'],
-    });
-  }
-
   const file = await unified()
     .use(remarkParse)
     .use(remarkRehype)
-    // Gunakan instance highlighter yang sudah kita buat
-    .use(rehypeShiki, { highlighter, theme: 'github-dark' })
+    // Gunakan plugin dengan opsi yang lebih sederhana
+    .use(rehypeShiki, {
+      // Anda bisa menentukan beberapa tema untuk mode terang dan gelap
+      // atau hanya satu tema dengan 'theme: "nama-tema"'
+      themes: {
+        light: 'github-light',
+        dark: 'github-dark',
+      }
+    })
     .use(rehypeStringify)
     .process(content);
 
