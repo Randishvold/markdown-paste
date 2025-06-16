@@ -3,9 +3,6 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { processMarkdown } from '@/lib/markdown'; // Kita akan buat ini selanjutnya
 import Link from 'next/link';
 
-type Props = {
-  params: { id: string };
-};
 
 // (Opsional tapi direkomendasikan) Generate beberapa halaman saat build time
 export async function generateStaticParams() {
@@ -19,7 +16,7 @@ export async function generateStaticParams() {
   return pastes?.map(({ id }) => ({ id })) || [];
 }
 
-export default async function PastePage({ params }: Props) {
+export default async function PastePage({ params }) {
   const supabase = createSupabaseServerClient();
   const { id } = await params;
 
