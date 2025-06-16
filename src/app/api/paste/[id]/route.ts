@@ -1,14 +1,15 @@
 import { NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
-type RouteContext = {
-  params: { id: string };
-};
+
 
 // Tipe untuk { params } sekarang disimpulkan secara otomatis oleh Next.js
-export async function GET(request: Request, context: RouteContext) {
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
-    const { id } = context.params; 
+    const id = params.id; 
 
     const supabase = createSupabaseServerClient();
 

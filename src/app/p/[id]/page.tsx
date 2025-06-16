@@ -5,7 +5,6 @@ import Link from 'next/link';
 
 type PageProps = {
   params: { id: string };
-  // searchParams?: { [key: string]: string | string[] | undefined }; // Opsional jika dibutuhkan
 };
 
 // (Opsional tapi direkomendasikan) Generate beberapa halaman saat build time
@@ -22,7 +21,7 @@ export async function generateStaticParams() {
 
 export default async function PastePage({ params }: PageProps) {
   const supabase = createSupabaseServerClient();
-  const { id } = params;
+  const id = params.id;
 
   const { data: paste } = await supabase
     .from('pastes')
