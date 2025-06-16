@@ -20,7 +20,8 @@ export async function GET(
     }
 
     return NextResponse.json(paste);
-  } catch (_e) {
+  } catch (e) {
+    console.error('Error fetching paste by ID:', e); 
     return NextResponse.json({ error: 'Server error.' }, { status: 500 });
   }
 }
