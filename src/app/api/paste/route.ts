@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     const { data: newPaste, error } = await supabase
       .from('pastes')
       .insert({ id, content })
-      .select()
+      .select('id, created_at')
       .single();
 
     if (error) {
@@ -30,29 +30,24 @@ export async function POST(request: Request) {
     }
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-    
-      const newPasteUrl = `${appUrl}/p/${newPaste.id}`;
+    let finalUrl: string;
 
-      fetch(newPasteUrl).catch(err => {
+    if (appUrl) {
+      finalUrl = `${appUrl}/p/${newPaste.id}`;
+      fetch(finalUrl).catch(err => {
         console.error(`Failed to warm cache for new paste ${newPaste.id}:`, err.message);
       });
-
-      return NextResponse.json({
-        id: newPaste.id,
-        url: newPasteUrl,
-        created_at: newPaste.created_at,
-      });
+    } else {
+      console.warn("Cache warming skipped: NEXT_PUBLIC_APP_URL is not set.");
+      finalUrl = `https://${request.headers.get('host')}/p/${newPaste.id}`;
     }
 
-    // Fallback jika NEXT_PUBLIC_APP_URL tidak terdefinisi
-    const fallbackUrl = `https://${request.headers.get('host')}/p/${newPaste.id}`;
+    
     return NextResponse.json({
-        id: newPaste.id,
-        url: fallbackUrl,
-        created_at: newPaste.created_at,
-        warning: "Cache warming skipped: NEXT_PUBLIC_APP_URL is not set."
+      id: newPaste.id,
+      url: finalUrl,
+      created_at: newPaste.created_at,
     });
-
 
   } catch (e) {
     if (e instanceof Error) {
