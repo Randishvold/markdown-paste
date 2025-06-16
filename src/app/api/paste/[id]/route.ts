@@ -1,12 +1,14 @@
 import { NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
+// Tipe untuk { params } sekarang disimpulkan secara otomatis oleh Next.js
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }
 ) {
   try {
     const { id } = await params;
+
     const supabase = createSupabaseServerClient();
 
     const { data: paste, error } = await supabase
@@ -21,7 +23,7 @@ export async function GET(
 
     return NextResponse.json(paste);
   } catch (e) {
-    console.error('Error fetching paste by ID:', e); 
+    console.error('Error fetching paste by ID:', e);
     return NextResponse.json({ error: 'Server error.' }, { status: 500 });
   }
 }
