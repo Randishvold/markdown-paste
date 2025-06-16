@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 
 type PageProps = {
-  params: { id: string };
+   params: Promise<{ id: string }>;
 };
 
 export async function generateStaticParams() {
@@ -21,7 +21,7 @@ export async function generateStaticParams() {
 
 
 export default async function PastePage({ params }: PageProps) {
-  const id = params.id;
+   const { id } = await params;
 
   const supabase = createSupabaseServerClient();
 
