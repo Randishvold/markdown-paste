@@ -3,9 +3,11 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { processMarkdown } from '@/lib/markdown';
 import Link from 'next/link';
 
+
 type PageProps = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
+
 
 export async function generateStaticParams() {
   const supabase = createSupabaseServerClient();
@@ -13,20 +15,19 @@ export async function generateStaticParams() {
   return pastes?.map(({ id }) => ({ id })) || [];
 }
 
-// Fungsi helper untuk mendapatkan judul dari konten
 const getPageTitle = (content: string): string => {
   const firstLine = content.split('\n')[0].trim();
   const match = firstLine.match(/^#+\s+(.*)/);
-  // Jika ditemukan heading markdown di baris pertama, gunakan itu
   if (match && match[1]) {
-    return match[1].trim(); // <-- Tambahkan 'return'
+    return match[1].trim();
   }
-  // Jika tidak, gunakan 50 karakter pertama dari baris pertama
-  return firstLine.substring(0, 70) || 'Untitled Paste'; // <-- Tambahkan 'return'
+  return firstLine.substring(0, 70) || 'Untitled Paste';
 }
 
 export default async function PastePage({ params }: PageProps) {
-  const id = params.id;
+  
+  const { id } = await params;
+
   const supabase = createSupabaseServerClient();
   const { data: paste } = await supabase.from('pastes').select('content, created_at').eq('id', id).single();
 
@@ -60,7 +61,6 @@ export default async function PastePage({ params }: PageProps) {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 'prose-invert' adalah kelas dari plugin typography untuk mode gelap */}
         <article
           className="prose prose-lg lg:prose-xl max-w-none prose-invert"
           dangerouslySetInnerHTML={{ __html: processedHtml }}
