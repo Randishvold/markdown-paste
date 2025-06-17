@@ -1,15 +1,17 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
+const MAX_LIMIT = 45; 
+
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const limitParam = searchParams.get('limit');
 
-  let limit = 10;
+  let limit = 10; 
   if (limitParam) {
     const parsedLimit = parseInt(limitParam, 10);
     if (!isNaN(parsedLimit) && parsedLimit > 0) {
-      limit = parsedLimit;
+      limit = Math.min(parsedLimit, MAX_LIMIT);
     }
   }
 
@@ -18,11 +20,8 @@ export async function GET(request: NextRequest) {
 
     const { data: pastes, error } = await supabase
       .from('pastes')
-      
       .select('id, created_at, content')
-      
       .order('created_at', { ascending: false })
-      
       .limit(limit);
 
     if (error) {
