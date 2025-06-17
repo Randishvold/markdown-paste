@@ -13,15 +13,16 @@ export async function generateStaticParams() {
   return pastes?.map(({ id }) => ({ id })) || [];
 }
 
+// Fungsi helper untuk mendapatkan judul dari konten
 const getPageTitle = (content: string): string => {
-  const firstLine = content.split('\n')[0];
-  // Cari heading markdown pertama, jika tidak ada, gunakan baris pertama
+  const firstLine = content.split('\n')[0].trim();
   const match = firstLine.match(/^#+\s+(.*)/);
+  // Jika ditemukan heading markdown di baris pertama, gunakan itu
   if (match && match[1]) {
-    return match[1];
+    return match[1].trim(); // <-- Tambahkan 'return'
   }
-  // Ambil 50 karakter pertama jika tidak ada heading
-  return firstLine.trim().substring(0, 50) || 'Untitled Paste';
+  // Jika tidak, gunakan 50 karakter pertama dari baris pertama
+  return firstLine.substring(0, 70) || 'Untitled Paste'; // <-- Tambahkan 'return'
 }
 
 export default async function PastePage({ params }: PageProps) {
@@ -39,19 +40,18 @@ export default async function PastePage({ params }: PageProps) {
   const rawApiUrl = `${appUrl}/api/paste/${id}`;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen font-sans dark:bg-dark-bg dark:text-dark-text-primary">
       <header className="bg-dark-surface sticky top-0 z-10 border-b border-gray-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            {/* Judul sebagai Header */}
-            <h1 className="text-lg font-semibold truncate" title={pageTitle}>
+            <h1 className="text-lg font-semibold truncate text-dark-text-primary" title={pageTitle}>
               {pageTitle}
             </h1>
-            <div className="flex items-center space-x-2">
-              <a href={rawApiUrl} target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 text-xs font-medium bg-gray-600 rounded-md hover:bg-gray-700 transition">
+            <div className="flex items-center space-x-3">
+              <a href={rawApiUrl} target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 text-xs font-medium text-white bg-gray-600 rounded-md hover:bg-gray-700 transition-colors">
                 View Raw
               </a>
-              <Link href="/" className="px-3 py-1.5 text-xs font-medium bg-teal-accent-500 rounded-md hover:bg-teal-accent-600 transition">
+              <Link href="/" className="px-3 py-1.5 text-xs font-medium text-white bg-teal-accent-500 rounded-md hover:bg-teal-accent-600 transition-colors">
                 New Paste
               </Link>
             </div>
@@ -60,6 +60,7 @@ export default async function PastePage({ params }: PageProps) {
       </nav>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* 'prose-invert' adalah kelas dari plugin typography untuk mode gelap */}
         <article
           className="prose prose-lg lg:prose-xl max-w-none prose-invert"
           dangerouslySetInnerHTML={{ __html: processedHtml }}
