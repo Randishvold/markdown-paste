@@ -91,7 +91,7 @@ export default function HomePage() {
               <h2 className="text-xl font-semibold mb-4">Documentation</h2>
               <ul className="space-y-2">
                  <li>
-                    <Link href="/p/dummy-id-docs" className="block group p-3 rounded-lg hover:bg-dark-bg transition-colors duration-150">
+                    <Link href="/p/g-fZb6bp" className="block group p-3 rounded-lg hover:bg-dark-bg transition-colors duration-150">
                       <p className="text-sm font-medium text-teal-accent-500 group-hover:underline">How to use our API</p>
                       <p className="text-xs text-dark-text-secondary mt-1">A quick guide and examples.</p>
                     </Link>
