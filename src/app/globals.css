@@ -4,6 +4,7 @@
 /* Memuat plugin typography langsung dari CSS */
 @plugin "@tailwindcss/typography";
 
+
 /* Mendefinisikan semua kustomisasi tema di dalam blok @theme */
 @theme {
   /* Definisikan warna kustom kita sebagai variabel CSS */
@@ -32,4 +33,17 @@
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;
   }
+}
+
+
+.prose :where(code):not(:where(pre *)) {
+  @apply bg-dark-surface text-teal-accent-500 font-medium px-1.5 py-0.5 rounded-md;
+  /* Menghapus backtick secara visual */
+  &::before, &::after {
+    content: none !important;
+  }
+}
+
+.language-label {
+  @apply absolute top-2 left-4 text-xs font-mono text-dark-text-secondary;
 }

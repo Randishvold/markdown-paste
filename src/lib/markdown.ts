@@ -11,10 +11,7 @@ export async function processMarkdown(content: string): Promise<string> {
     .use(remarkGfm)
     .use(remarkRehype)
     .use(rehypeShiki, {
-      themes: {
-        light: 'github-light',
-        dark: 'github-dark',
-      }
+      theme: 'kanagawa-wave',
     })
     .use(rehypeStringify)
     .process(content);
