@@ -13,7 +13,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <body className="font-sans">{children}</body>
+      <body className="font-sans bg-gray-50 text-gray-800 dark:bg-dark-bg dark:text-dark-text-primary">
+        {children}
+      </body>
     </html>
   )
 }
