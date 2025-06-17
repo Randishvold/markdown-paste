@@ -57,7 +57,7 @@ export default async function PastePage({ params }: PageProps) {
             </div>
           </div>
         </div>
-      </nav>
+      </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* 'prose-invert' adalah kelas dari plugin typography untuk mode gelap */}
