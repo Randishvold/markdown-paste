@@ -3,12 +3,12 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { processMarkdown } from '@/lib/markdown';
 import Link from 'next/link';
 
-
+// FIX #1: Tipe 'params' didefinisikan sebagai Promise, sesuai kebutuhan build Vercel.
 type PageProps = {
   params: Promise<{ id: string }>;
 };
 
-
+// Fungsi ini tidak berubah.
 export async function generateStaticParams() {
   const supabase = createSupabaseServerClient();
   const { data: pastes } = await supabase.from('pastes').select('id').limit(10).order('created_at', { ascending: false });
@@ -25,7 +25,7 @@ const getPageTitle = (content: string): string => {
 }
 
 export default async function PastePage({ params }: PageProps) {
-  
+  // FIX #2: 'await' digunakan untuk mendapatkan isi dari Promise 'params'.
   const { id } = await params;
 
   const supabase = createSupabaseServerClient();
@@ -42,6 +42,7 @@ export default async function PastePage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen font-sans dark:bg-dark-bg dark:text-dark-text-primary">
+      {/* FIX #3: Tag HTML sudah benar (<header> ditutup dengan </header>). */}
       <header className="bg-dark-surface sticky top-0 z-10 border-b border-gray-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -52,6 +53,7 @@ export default async function PastePage({ params }: PageProps) {
               <a href={rawApiUrl} target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 text-xs font-medium text-white bg-gray-600 rounded-md hover:bg-gray-700 transition-colors">
                 View Raw
               </a>
+              {/* FIX #4: Link internal menggunakan komponen <Link>. */}
               <Link href="/" className="px-3 py-1.5 text-xs font-medium text-white bg-teal-accent-500 rounded-md hover:bg-teal-accent-600 transition-colors">
                 New Paste
               </Link>
@@ -61,6 +63,7 @@ export default async function PastePage({ params }: PageProps) {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* FIX #5: 'prose-invert' digunakan untuk gaya mode gelap yang benar. */}
         <article
           className="prose prose-lg lg:prose-xl max-w-none prose-invert"
           dangerouslySetInnerHTML={{ __html: processedHtml }}
